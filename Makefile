@@ -5,19 +5,14 @@ all: gen
 
 .PHONY: gen
 gen:
-	generate-groups.sh \
-	all \
-	k8s-controller-custom-resource/pkg/client \
-	k8s-controller-custom-resource/pkg/apis \
-	samplecrd:v1 \
-	--go-header-file=./hack/boilerplate.go.txt \
-	--output-base ../
+	hack/update-codegen.sh
+	rm -rf ./github.com
 	deepcopy-gen \
-    --input-dirs ./pkg/apis/samplecrd/v1 \
+    --input-dirs ./pkg/apis/samplecontroller/v1 \
     -O zz_generated.deepcopy \
-    --go-header-file=./hack/boilerplate.go.txt \
+    --go-header-file=./hack/boilerplate.go.txt
 
 .PHONY: clean
 clean:
 	rm -rf ./pkg/client
-	rm ./pkg/apis/samplecrd/v1/zz_generated.deepcopy.go
+	rm -f ./pkg/apis/samplecontroller/v1/zz_generated.deepcopy.go

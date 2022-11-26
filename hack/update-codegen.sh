@@ -18,30 +18,26 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
+# 注意事项：该脚本生成的zz_generated_deepcopy.go路径不对
 SCRIPT_ROOT=$(dirname "${BASH_SOURCE[0]}")/..
-
-# generate the code with:
-# - --output-base because this script should also be able to run inside the vendor dir of
-#   k8s.io/kubernetes. The output-base is needed for the generators to output into the vendor dir
-#   instead of the $GOPATH directly. For normal projects this can be dropped.
-"$(dirname "${BASH_SOURCE[0]}")"/../generate-internal-groups.sh all \
-  k8s.io/code-generator/examples/apiserver k8s.io/code-generator/examples/apiserver/apis k8s.io/code-generator/examples/apiserver/apis \
-  "example:v1 example2:v1 example3.io:v1" \
-  --output-base "$(dirname "${BASH_SOURCE[0]}")/../../.." \
-  --go-header-file "${SCRIPT_ROOT}/hack/boilerplate.go.txt"
-"$(dirname "${BASH_SOURCE[0]}")"/../generate-groups.sh all \
-  k8s.io/code-generator/examples/crd k8s.io/code-generator/examples/crd/apis \
-  "example:v1 example2:v1" \
-  --output-base "$(dirname "${BASH_SOURCE[0]}")/../../.." \
-  --go-header-file "${SCRIPT_ROOT}/hack/boilerplate.go.txt"
-"$(dirname "${BASH_SOURCE[0]}")"/../generate-groups.sh all \
-  k8s.io/code-generator/examples/MixedCase k8s.io/code-generator/examples/MixedCase/apis \
-  "example:v1" \
-  --output-base "$(dirname "${BASH_SOURCE[0]}")/../../.." \
-  --go-header-file "${SCRIPT_ROOT}/hack/boilerplate.go.txt"
-"$(dirname "${BASH_SOURCE[0]}")"/../generate-groups.sh all \
-  k8s.io/code-generator/examples/HyphenGroup k8s.io/code-generator/examples/HyphenGroup/apis \
-  "example:v1" \
-  --output-base "$(dirname "${BASH_SOURCE[0]}")/../../.." \
-  --go-header-file "${SCRIPT_ROOT}/hack/boilerplate.go.txt"
-
+# CODEGEN_PKG=${CODEGEN_PKG:-$(cd "${SCRIPT_ROOT}"; ls -d -1 ./vendor/k8s.io/code-generator 2>/dev/null || echo ../code-generator)}
+CODEGEN_PKG=${GOPATH}/src/k8s.io/code-generator
+MODULE=github.com/lianyz/sample-controller
+OUTPUT_PKG=pkg/client
+APIS_PKG=pkg/apis
+GROUP=samplecontroller
+VERSION=v1
+bash "${CODEGEN_PKG}"/generate-groups.sh all \
+${OUTPUT_PKG} ${MODULE}/${APIS_PKG} \
+${GROUP}:${VERSION} \
+--output-base "${SCRIPT_ROOT}" \
+--go-header-file "${SCRIPT_ROOT}"/hack/boilerplate.go.txt \
+#####################样例 start##################################
+#注意事项：
+#MODULE需和go.mod文件内容一致
+#"${CODEGEN_PKG}"/generate-groups.sh "deepcopy,client,informer,lister" \
+#  sample-controller/pkg/generated sample-controller/pkg/apis \
+#  samplecontroller:v1 \
+#  --output-base "$(dirname "${BASH_SOURCE[0]}")/../.." \
+#  --go-header-file "${SCRIPT_ROOT}"/hack/boilerplate.go.txt
+#####################样例 end##################################
