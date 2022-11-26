@@ -4,4 +4,8 @@
 @Description :
 */
 
-package k8s_controller_custom_resource
+package main
+
+func main() {
+
+}
