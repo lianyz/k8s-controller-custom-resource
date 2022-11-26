@@ -5,7 +5,7 @@ all: gen
 
 .PHONY: gen
 gen:
-	hack/update-codegen.sh
+	hack/update-codegen.sh samplecrd v1
 
 .PHONY: clean
 clean:
