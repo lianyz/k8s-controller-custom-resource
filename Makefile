@@ -10,4 +10,4 @@ gen:
 .PHONY: clean
 clean:
 	rm -rf ./pkg/client
-	rm -f ./pkg/apis/samplecontroller/v1/zz_generated.deepcopy.go
+	rm -f ./pkg/apis/*/*/zz_generated.deepcopy.go
