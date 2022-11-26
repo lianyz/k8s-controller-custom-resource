@@ -19,11 +19,11 @@ spec:
           spec:
             type: object
             properties:
-              cronSpec:
+              cidr:
                 type: string
-              image:
+              gateway:
                 type: string
-              replicas:
+              version:
                 type: integer
   scope: Namespaced
   names:
