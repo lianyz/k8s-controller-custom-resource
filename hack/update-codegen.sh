@@ -33,12 +33,3 @@ ${MODULE}/${OUTPUT_PKG} ${MODULE}/${APIS_PKG} \
 ${GROUP}:${VERSION} \
 --output-base "${SCRIPT_ROOT}"/../../.. \
 --go-header-file "${SCRIPT_ROOT}"/hack/boilerplate.go.txt \
-#####################样例 start##################################
-#注意事项：
-#MODULE需和go.mod文件内容一致
-#"${CODEGEN_PKG}"/generate-groups.sh "deepcopy,client,informer,lister" \
-#  sample-controller/pkg/generated sample-controller/pkg/apis \
-#  samplecontroller:v1 \
-#  --output-base "$(dirname "${BASH_SOURCE[0]}")/../.." \
-#  --go-header-file "${SCRIPT_ROOT}"/hack/boilerplate.go.txt
-#####################样例 end##################################
