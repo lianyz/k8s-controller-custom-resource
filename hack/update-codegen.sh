@@ -22,10 +22,10 @@ set -o pipefail
 SCRIPT_ROOT=$(dirname "${BASH_SOURCE[0]}")/..
 # CODEGEN_PKG=${CODEGEN_PKG:-$(cd "${SCRIPT_ROOT}"; ls -d -1 ./vendor/k8s.io/code-generator 2>/dev/null || echo ../code-generator)}
 CODEGEN_PKG=${GOPATH}/src/k8s.io/code-generator
-MODULE=github.com/lianyz/sample-controller
+MODULE=github.com/lianyz/k8s-controller-custom-resource
 OUTPUT_PKG=pkg/client
 APIS_PKG=pkg/apis
-GROUP=samplecontroller
+GROUP=samplecrd
 VERSION=v1
 bash "${CODEGEN_PKG}"/generate-groups.sh all \
 ${MODULE}/${OUTPUT_PKG} ${MODULE}/${APIS_PKG} \
