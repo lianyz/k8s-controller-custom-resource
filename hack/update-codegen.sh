@@ -29,7 +29,7 @@ APIS_PKG=pkg/apis
 GROUP=samplecrd
 VERSION=v1
 bash "${CODEGEN_PKG}"/generate-groups.sh all \
-${MODULE}/${OUTPUT_PKG} ${MODULE}/${APIS_PKG} \
+"${MODULE}"/${OUTPUT_PKG} "${MODULE}"/${APIS_PKG} \
 ${GROUP}:${VERSION} \
 --output-base "${SCRIPT_ROOT}"/../../.. \
 --go-header-file "${SCRIPT_ROOT}"/hack/boilerplate.go.txt \
