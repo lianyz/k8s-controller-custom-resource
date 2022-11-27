@@ -9,8 +9,11 @@ gen:
 
 .PHONY: build
 build:
-	go build -o bin/samplecrd-controller .
+	GOOS=linux GOARCH=amd64 go build -o bin/samplecrd-controller .
 
+.PHONY: run
+run:
+	./bin/samplecrd-controller -kubeconfig=$HOME/.kube/config -alsologtostderr=true
 .PHONY: clean
 clean:
 	rm -rf ./pkg/client
