@@ -198,7 +198,7 @@ func (c *Controller) enqueueNetwork(obj interface{}) {
 		runtime.HandleError(err)
 		return
 	}
-
+	glog.Infof("CreateFunc obj: %v, key: %v", obj, key)
 	c.workQueue.AddRateLimited(key)
 }
 
@@ -213,6 +213,7 @@ func (c *Controller) enqueueNetworkForUpdate(old, new interface{}) {
 		// Two different versions of the same Network will always have different ResourceVersions.
 		return
 	}
+	glog.Infof("UpdateFunc old obj: %v, new obj: %v", old, new)
 	c.enqueueNetwork(new)
 }
 
@@ -223,5 +224,6 @@ func (c *Controller) enqueueNetworkForDelete(obj interface{}) {
 		return
 	}
 
+	glog.Infof("DeleteFunc obj:%v, key:%v", obj, key)
 	c.workQueue.AddRateLimited(key)
 }
