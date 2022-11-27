@@ -13,7 +13,7 @@ build:
 
 .PHONY: run
 run:
-	./bin/samplecrd-controller -kubeconfig=$HOME/.kube/config -alsologtostderr=true
+	./bin/samplecrd-controller -kubeconfig=$(HOME)/.kube/config -alsologtostderr=true
 .PHONY: clean
 clean:
 	rm -rf ./pkg/client
