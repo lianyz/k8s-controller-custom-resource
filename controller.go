@@ -176,6 +176,9 @@ func (c *Controller) syncHandler(key string) error {
 				namespace, name)
 			glog.Infof("[Neutron] Deleting network: %s/%s ...", namespace, name)
 
+			// todo call Neutron API to delete this network by name.
+			//
+			// neutron.Delete(namespace, name)
 			return nil
 		}
 		runtime.HandleError(fmt.Errorf("failed to list network by: %s/%s", namespace, name))
@@ -184,6 +187,16 @@ func (c *Controller) syncHandler(key string) error {
 	}
 
 	glog.Infof("[Neutron] Try to process network: %#v ...", network)
+
+	// todo Do diff()
+	//
+	// actualNetwork, exists := neutron.Get(namespace, name)
+	//
+	// if !exists {
+	//   neutron.Create(namespace, name)
+	// } else if !reflect.DeepEqual(actualNetwork, network) {
+	//   neutron.Update(namespace, name)
+	// }
 
 	c.recorder.Event(network, corev1.EventTypeNormal, SucceedSynced, MessageResourceSynced)
 	return nil
@@ -198,7 +211,6 @@ func (c *Controller) enqueueNetwork(obj interface{}) {
 		runtime.HandleError(err)
 		return
 	}
-	glog.Infof("CreateFunc obj: %v, key: %v", obj, key)
 	c.workQueue.AddRateLimited(key)
 }
 
@@ -213,7 +225,6 @@ func (c *Controller) enqueueNetworkForUpdate(old, new interface{}) {
 		// Two different versions of the same Network will always have different ResourceVersions.
 		return
 	}
-	glog.Infof("UpdateFunc old obj: %v, new obj: %v", old, new)
 	c.enqueueNetwork(new)
 }
 
@@ -224,6 +235,5 @@ func (c *Controller) enqueueNetworkForDelete(obj interface{}) {
 		return
 	}
 
-	glog.Infof("DeleteFunc obj:%v, key:%v", obj, key)
 	c.workQueue.AddRateLimited(key)
 }
