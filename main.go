@@ -12,6 +12,7 @@ import (
 	clientset "github.com/lianyz/k8s-controller-custom-resource/pkg/client/clientset/versioned"
 	informers "github.com/lianyz/k8s-controller-custom-resource/pkg/client/informers/externalversions"
 	"github.com/lianyz/k8s-controller-custom-resource/pkg/signals"
+	kubeinformers "k8s.io/client-go/informers"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 	"time"
@@ -48,11 +49,15 @@ func main() {
 		glog.Fatal("error building example clientset: %s", err.Error())
 	}
 
+	kubeInformerFactory := kubeinformers.NewSharedInformerFactory(kubeClient, time.Second*30)
+
 	networkInformerFactory := informers.NewSharedInformerFactory(networkClient, time.Second*30)
 
 	controller := NewController(kubeClient, networkClient,
+		kubeInformerFactory.Apps().V1().Deployments(),
 		networkInformerFactory.Samplecrd().V1().Networks())
 
+	go kubeInformerFactory.Start(stopCh)
 	go networkInformerFactory.Start(stopCh)
 
 	if err = controller.Run(2, stopCh); err != nil {

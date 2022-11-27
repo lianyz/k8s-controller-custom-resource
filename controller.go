@@ -16,6 +16,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/runtime"
 	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/apimachinery/pkg/util/wait"
+	kubeinformers "k8s.io/client-go/informers/apps/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/kubernetes/scheme"
 	typedcorev1 "k8s.io/client-go/kubernetes/typed/core/v1"
@@ -42,6 +43,8 @@ type Controller struct {
 
 	networkClientset clientset.Interface
 
+	deployInformer kubeinformers.DeploymentInformer
+
 	networksLister listers.NetworkLister
 	networkSynced  cache.InformerSynced
 
@@ -54,6 +57,7 @@ type Controller struct {
 func NewController(
 	kubeClientset kubernetes.Interface,
 	networkClientset clientset.Interface,
+	deployInformer kubeinformers.DeploymentInformer,
 	networkInformer informers.NetworkInformer) *Controller {
 
 	utilruntime.Must(networkscheme.AddToScheme(scheme.Scheme))
@@ -66,6 +70,7 @@ func NewController(
 	controller := &Controller{
 		kubeClientset:    kubeClientset,
 		networkClientset: networkClientset,
+		deployInformer:   deployInformer,
 		networksLister:   networkInformer.Lister(),
 		networkSynced:    networkInformer.Informer().HasSynced,
 		workQueue:        workqueue.NewNamedRateLimitingQueue(workqueue.DefaultControllerRateLimiter(), "Networks"),
